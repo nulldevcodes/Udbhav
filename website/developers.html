@@ -1,0 +1,1286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Udbhav — Developer Portal (Mock)</title>
+<style>
+  /* ====== Colors & tokens (white, yellow, green, blue) ====== */
+  :root{
+    --bg:#f8fafc; --card:#ffffff; --muted:#64748b; --accent-blue:#0078d7; --accent-green:#00a859; --accent-yellow:#ffe600;
+    --text:#0f1724; --glass: rgba(2,6,23,0.03);
+    --success:var(--accent-green); --danger:#ef4444;
+    --radius:12px;
+    --shadow: 0 8px 24px rgba(15,23,42,0.06);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;color:var(--text);background:linear-gradient(180deg,#f8fafc,#e6f7ff 60%);}
+  a{color:var(--accent-blue); text-decoration:none}
+  /* Layout */
+  .app{display:grid;grid-template-columns:260px 1fr;gap:24px;max-width:1400px;margin:24px auto;padding:16px;}
+  .sidebar{background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);position:sticky;top:18px;height:calc(100vh - 36px);overflow:auto}
+  .brand{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+  .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent-yellow),var(--accent-blue));display:flex;align-items:center;justify-content:center;font-weight:700;color:#012;}
+  .title{font-weight:700;font-size:16px}
+  .desc{font-size:12px;color:var(--muted)}
+  .nav{margin-top:12px}
+  .nav button{display:flex;align-items:center;gap:10px;width:100%;padding:10px;border-radius:10px;border:none;background:transparent;color:var(--text);font-weight:600;cursor:pointer}
+  .nav button.active{background:linear-gradient(90deg, rgba(0,120,215,0.08), rgba(0,168,89,0.04));box-shadow:inset 0 0 0 1px rgba(0,0,0,0.03)}
+  .meta{margin-top:14px;padding:10px;border-radius:10px;background:linear-gradient(180deg,rgba(0,120,215,0.03),transparent);font-size:13px}
+  .small{font-size:13px;color:var(--muted)}
+  .main{padding:12px}
+  .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .search{display:flex;gap:10px;align-items:center}
+  .search input{padding:10px 12px;border-radius:10px;border:1px solid rgba(2,6,23,0.06);width:420px;background:transparent}
+  .btn{background:var(--accent-blue);color:white;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+  .btn.secondary{background:transparent;border:1px solid rgba(2,6,23,0.06);color:var(--text)}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:var(--shadow)}
+  h2{margin:0 0 8px 0}
+  p{margin:0;color:var(--muted)}
+  .stat{font-size:22px;font-weight:800;color:var(--text)}
+  .mini{font-size:13px;color:var(--muted)}
+  /* sections */
+  .section{margin-bottom:18px}
+  .row{display:flex;gap:12px;align-items:center}
+  .col{flex:1}
+  .panel{background:linear-gradient(180deg,#fff,#fbfdff);padding:14px;border-radius:12px;border:1px solid rgba(2,6,23,0.03)}
+  /* Playground & code */
+  textarea, input[type=text], select {width:100%;padding:10px;border-radius:8px;border:1px solid rgba(2,6,23,0.06);background:transparent}
+  pre.code{background:#071330;color:#e6f6ff;padding:12px;border-radius:8px;overflow:auto;font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;font-size:13px}
+  .table{width:100%;border-collapse:collapse;margin-top:8px}
+  .table th,.table td{padding:8px;text-align:left;border-bottom:1px solid rgba(2,6,23,0.04);font-size:13px}
+  .badge{display:inline-block;padding:6px 8px;border-radius:6px;background:linear-gradient(90deg,var(--accent-blue),var(--accent-green));color:white;font-weight:700}
+  .muted{color:var(--muted)}
+  footer{margin-top:24px;text-align:center;color:var(--muted);font-size:13px}
+  /* responsive */
+  @media(max-width:1000px){.app{grid-template-columns:1fr;}.sidebar{position:static;height:auto;}}
+  /* modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(2,6,23,0.4);display:none;align-items:center;justify-content:center;z-index:50}
+  .modal{width:920px;max-width:95%;background:var(--card);border-radius:12px;padding:18px;box-shadow:0 20px 50px rgba(2,6,23,0.3)}
+  .modal .row{margin-bottom:8px}
+  .close{margin-left:auto;cursor:pointer;padding:6px;border-radius:6px}
+  /* tiny helpers */
+  .right{margin-left:auto}
+  .pill{padding:6px 8px;border-radius:999px;background:linear-gradient(90deg,var(--accent-yellow),var(--accent-green));font-weight:700;color:#012}
+  .copy{cursor:pointer;border:none;background:transparent;color:var(--accent-blue);font-weight:700}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">U</div>
+      <div>
+        <div class="title">Udbhav Dev Console</div>
+        <div class="desc">Swadeshi API & Developer Ecosystem</div>
+      </div>
+    </div>
+
+    <div id="authSection" class="meta">
+      <div id="signedOutUI">
+        <div class="small">Not signed in</div>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button class="btn" onclick="openModal('signin')">Sign In</button>
+          <button class="btn secondary" onclick="openModal('signup')">Sign Up</button>
+        </div>
+      </div>
+      <div id="signedInUI" style="display:none">
+        <div style="display:flex;gap:10px;align-items:center">
+          <div style="width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--accent-yellow),var(--accent-blue));display:flex;align-items:center;justify-content:center;font-weight:700;color:#012" id="avatarInitial">A</div>
+          <div>
+            <div id="userName" style="font-weight:800">User</div>
+            <div class="small" id="userEmail">email@example.com</div>
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <div class="small">UBT Balance</div>
+          <div class="stat" id="ubtBalance">0</div>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <button class="btn" onclick="openModal('createKey')">Create API Key</button>
+          <button class="btn secondary" onclick="signOut()">Sign Out</button>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav" style="margin-top:14px">
+      <button class="active" data-page="dashboard" onclick="nav('dashboard',this)">Dashboard</button>
+      <button data-page="apis" onclick="nav('apis',this)">APIs & Keys</button>
+      <button data-page="playground" onclick="nav('playground',this)">Playground</button>
+      <button data-page="openData" onclick="nav('openData',this)">Open Data</button>
+      <button data-page="plugin" onclick="nav('plugin',this)">Plugin SDK</button>
+      <button data-page="ai" onclick="nav('ai',this)">AI Marketplace</button>
+      <button data-page="ondc" onclick="nav('ondc',this)">ONDC & UPI</button>
+      <button data-page="web3" onclick="nav('web3',this)">Web3 Rewards</button>
+      <button data-page="contrib" onclick="nav('contrib',this)">Contributor Program</button>
+      <button data-page="activity" onclick="nav('activity',this)">Activity Stream</button>
+      <div style="height:12px"></div>
+      <div class="small muted">Account</div>
+      <div style="margin-top:8px">
+        <div class="small">Plan: <strong>Community</strong></div>
+        <div class="small">Requests/day: <strong id="quota">1000</strong></div>
+      </div>
+    </nav>
+
+    <div style="margin-top:14px" class="small muted">Quick Links</div>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+      <button class="pill" onclick="nav('playground')">API Playground</button>
+      <button class="pill" onclick="nav('plugin')">Publish Plugin</button>
+      <button class="pill" onclick="nav('ai')">Upload Model</button>
+    </div>
+
+    <footer style="margin-top:18px;text-align:center;font-size:13px;color:var(--muted)">
+      Udbhav · Viksit Bharat Buildathon 2025
+    </footer>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="topbar">
+      <div style="display:flex;gap:12px;flex-direction:column">
+        <div style="display:flex;gap:12px;align-items:center">
+          <h2 style="margin:0">Developer Dashboard</h2>
+          <div class="mini muted">Manage APIs • Plugins • AI • Rewards • Data</div>
+        </div>
+        <div class="small muted">Welcome to the Udbhav developer console — everything here is a local mock demo.</div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:center">
+        <div class="search">
+          <input id="globalSearch" placeholder="Search APIs, docs, plugins..." oninput="searchLive(this.value)"/>
+        </div>
+        <button class="btn" onclick="openModal('help')">Docs</button>
+      </div>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <section id="page-dashboard" class="page">
+      <div class="grid-3">
+        <div class="card">
+          <div class="row" style="align-items:center">
+            <div>
+              <div class="small">Total API Calls (30d)</div>
+              <div class="stat" id="statCalls">0</div>
+              <div class="mini muted">Requests used this month</div>
+            </div>
+            <div class="right">
+              <div class="mini muted">Udbhav Tokens</div>
+              <div class="stat" id="statUBT">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="small">Active API Keys</div>
+          <div class="row" style="margin-top:8px;align-items:center">
+            <div class="stat" id="statKeys">0</div>
+            <div class="right">
+              <button class="btn" onclick="openModal('createKey')">New Key</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="small">Plugins Published</div>
+          <div class="row" style="margin-top:8px;align-items:center">
+            <div class="stat" id="statPlugins">0</div>
+            <div class="right">
+              <button class="btn" onclick="openModal('publishPlugin')">Publish</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:16px;margin-top:16px">
+        <div class="col panel card" style="flex:2">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="font-weight:800">API Usage (last 7 days)</div>
+            <div class="mini muted">Simulated metrics</div>
+            <div class="right">
+              <button class="btn secondary" onclick="simulateTraffic()">Simulate Traffic</button>
+            </div>
+          </div>
+          <canvas id="usageChart" height="140" style="margin-top:12px;width:100%"></canvas>
+
+          <div style="margin-top:12px;display:flex;gap:12px">
+            <div class="card" style="flex:1;padding:12px">
+              <div class="mini muted">Errors (last 7d)</div>
+              <div class="stat" id="statErrors">0</div>
+            </div>
+            <div class="card" style="flex:1;padding:12px">
+              <div class="mini muted">Avg Latency</div>
+              <div class="stat" id="statLatency">120ms</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col panel card" style="flex:1">
+          <div style="display:flex;gap:8px;align-items:center">
+            <div style="font-weight:800">Activity Stream</div>
+            <div class="mini muted right">Recent events</div>
+          </div>
+          <div id="activity" style="margin-top:12px;max-height:300px;overflow:auto"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- APIS & KEYS -->
+    <section id="page-apis" class="page" style="display:none">
+      <div class="row" style="align-items:center;gap:12px">
+        <h3>APIs & Keys</h3>
+        <div class="mini muted">Create API keys, manage endpoints, and view analytics.</div>
+        <div class="right">
+          <button class="btn" onclick="openModal('createKey')">Create Key</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:16px;margin-top:12px">
+        <div style="flex:1">
+          <div class="card">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="font-weight:800">Your API Keys</div>
+              <div class="mini muted">Manage keys</div>
+            </div>
+            <table class="table" id="keysTable">
+              <thead><tr><th>Key</th><th>Created</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div style="font-weight:800">APIs</div>
+            <div class="mini muted">Enable or disable mocked endpoints</div>
+            <table class="table" id="apisTable">
+              <thead><tr><th>Endpoint</th><th>Method</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="width:340px">
+          <div class="card">
+            <div style="font-weight:800">Key Quotas</div>
+            <div class="mini muted">Set per-key quotas (mock)</div>
+            <div style="margin-top:8px" class="small">Total Calls (30d): <strong id="quotaCalls">0</strong></div>
+            <div style="margin-top:8px"><button class="btn secondary" onclick="resetUsage()">Reset Usage</button></div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div style="font-weight:800">Webhook Simulator</div>
+            <div class="mini muted">Register a URL to receive mocked events</div>
+            <div style="margin-top:8px">
+              <input id="webhookUrl" placeholder="https://example.com/webhook" />
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button class="btn" onclick="registerWebhook()">Register</button>
+                <button class="btn secondary" onclick="sendTestWebhook()">Send Test</button>
+              </div>
+            </div>
+            <div style="margin-top:8px" class="small muted">Registered: <span id="webhookList">—</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLAYGROUND -->
+    <section id="page-playground" class="page" style="display:none">
+      <div class="row" style="align-items:center;gap:12px">
+        <h3>API Playground</h3>
+        <div class="mini muted">Send mock requests to Udbhav endpoints using your API key.</div>
+      </div>
+
+      <div class="row" style="margin-top:12px;gap:12px">
+        <div style="flex:1">
+          <div class="card">
+            <label>Method & Endpoint</label>
+            <select id="pgEndpoint">
+              <option>GET /v1/products</option>
+              <option>POST /v1/products</option>
+              <option>GET /v1/open-data/craft-trends</option>
+              <option>POST /v1/ai-models/predict</option>
+              <option>POST /v1/ondc/order/create</option>
+              <option>POST /v1/rewards/mint</option>
+            </select>
+            <label style="margin-top:8px">API Key</label>
+            <select id="pgKey"></select>
+            <label style="margin-top:8px">JSON Payload</label>
+            <textarea id="pgPayload" rows="6" placeholder='{"sample":true}'></textarea>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" onclick="runPlayground()">Send</button>
+              <button class="btn secondary" onclick="clearPlayground()">Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="width:420px">
+          <div class="card">
+            <div style="font-weight:800">Response</div>
+            <pre class="code" id="pgResponse" style="height:260px">No call yet</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OPEN DATA -->
+    <section id="page-openData" class="page" style="display:none">
+      <div class="row" style="align-items:center;gap:12px">
+        <h3>Open Data Explorer</h3>
+        <div class="mini muted">Query anonymized datasets for research (mock snapshots)</div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:12px">
+        <div style="flex:1">
+          <div class="card">
+            <label>Dataset</label>
+            <select id="odDataset">
+              <option value="craft_trends">Craft Trends</option>
+              <option value="regional_growth">Regional Growth</option>
+              <option value="eco_footprint">Eco Footprint</option>
+            </select>
+            <label style="margin-top:8px">Region (optional)</label>
+            <input id="odRegion" placeholder="State or district e.g., Odisha" />
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" onclick="queryOpenData()">Query</button>
+              <button class="btn secondary" onclick="downloadOpenData()">Export JSON</button>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div style="font-weight:800">Query Result</div>
+            <pre class="code" id="odResult" style="height:260px">No query yet</pre>
+          </div>
+        </div>
+
+        <div style="width:360px">
+          <div class="card">
+            <div style="font-weight:800">Snapshots</div>
+            <div class="mini muted">Versioned data snapshots for reproducible research</div>
+            <ul id="snapshotList" style="margin-top:8px"></ul>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div style="font-weight:800">Use Cases</div>
+            <ol class="mini muted">
+              <li>Trend forecasting for startups</li>
+              <li>Policy planning for district uplift</li>
+              <li>Academic research & reproducible analysis</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLUGIN SDK -->
+    <section id="page-plugin" class="page" style="display:none">
+      <div class="row" style="align-items:center;gap:12px">
+        <h3>Custom Plugin SDK</h3>
+        <div class="mini muted">Create sandboxed plugins for Udbhav events (onProductUpload, onOrderCompleted).</div>
+        <div class="right"><button class="btn" onclick="openModal('publishPlugin')">Publish Plugin</button></div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:12px">
+        <div style="flex:1">
+          <div class="card">
+            <label>Plugin ID</label>
+            <input id="pluginId" placeholder="eco-suggestor" />
+            <label style="margin-top:8px">Name</label>
+            <input id="pluginName" placeholder="Eco Suggestor" />
+            <label style="margin-top:8px">Code (JS) — onProductUpload hook</label>
+            <textarea id="pluginCode" rows="8" placeholder='// product = { id, name, price, tags, image }\n// return modified product\nproduct.tags.push("eco"); return product;'></textarea>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" onclick="publishPlugin()">Publish</button>
+              <button class="btn secondary" onclick="listPlugins()">List Plugins</button>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div style="font-weight:800">Installed Plugins</div>
+            <div id="pluginsArea" style="margin-top:8px"></div>
+          </div>
+        </div>
+
+        <div style="width:360px">
+          <div class="card">
+            <div style="font-weight:800">Plugin Metrics</div>
+            <div class="mini muted">Calls & token payouts for your plugins (mock)</div>
+            <table class="table" id="pluginMetrics"><thead><tr><th>Plugin</th><th>Calls</th><th>Tokens</th></tr></thead><tbody></tbody></table>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div style="font-weight:800">Security</div>
+            <div class="mini muted">Plugins run in sandbox. External network access requires approval.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI MARKET -->
+    <section id="page-ai" class="page" style="display:none">
+      <div class="row" style="align-items:center;gap:12px">
+        <h3>AI Model Marketplace</h3>
+        <div class="mini muted">Upload models for dialect detection, product recognition, and quality scoring.</div>
+        <div class="right"><button class="btn" onclick="openModal('uploadModel')">Upload Model</button></div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:12px">
+        <div style="flex:1">
+          <div class="card">
+            <label>Models</label>
+            <div id="modelsList" style="margin-top:8px"></div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div style="font-weight:800">Sandbox Inference</div>
+            <label>Choose Model</label>
+            <select id="sandboxModel"></select>
+            <label style="margin-top:8px">Input</label>
+            <textarea id="sandboxInput" rows="6" placeholder='{"text":"Sample input or base64 image"}'></textarea>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" onclick="runModel()">Run</button>
+              <button class="btn secondary" onclick="clearModelSandbox()">Clear</button>
+            </div>
+            <pre class="code" id="modelOutput" style="height:160px">No result</pre>
+          </div>
+        </div>
+
+        <div style="width:360px">
+          <div class="card">
+            <div style="font-weight:800">Marketplace Stats</div>
+            <div class="mini muted">Total models: <span id="modelCount">0</span></div>
+            <div style="margin-top:8px" class="mini muted">Earn UBT for each API call to your model.</div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div style="font-weight:800">Curation</div>
+            <div class="mini muted">Models are reviewed for fairness & accuracy by the AI Council (mock).</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ONDC & UPI -->
+    <section id="page-ondc" class="page" style="display:none">
+      <div class="row" style="align-items:center;gap:12px">
+        <h3>ONDC & UPI Integration</h3>
+        <div class="mini muted">Sync catalogs, place ONDC orders, and simulate UPI AutoCollect payments.</div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:12px">
+        <div style="flex:1">
+          <div class="card">
+            <label>Catalog JSON</label>
+            <textarea id="catalogJson" rows="6">[{"id":"P1","name":"Handloom Saree","price":1499,"seller":"A101","stock":12}]</textarea>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" onclick="syncCatalog()">Sync to ONDC</button>
+              <button class="btn secondary" onclick="viewCatalog()">View Catalog</button>
+            </div>
+            <pre class="code" id="catalogView" style="height:160px;margin-top:8px">[]</pre>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <label>Place ONDC Order (JSON)</label>
+            <textarea id="orderJson" rows="4">{"order_id":"ORD1001","product_id":"P1","buyer_vpa":"buyer@upi","amount":1499}</textarea>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" onclick="placeOrder()">Place Order</button>
+              <button class="btn secondary" onclick="simulateUPI()">Simulate UPI Payment</button>
+            </div>
+            <pre class="code" id="orderView" style="height:120px;margin-top:8px">No orders</pre>
+          </div>
+        </div>
+
+        <div style="width:360px">
+          <div class="card">
+            <div style="font-weight:800">Settlements</div>
+            <div class="mini muted" id="settlementView">No settlements yet</div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div style="font-weight:800">ONDC Log</div>
+            <div id="ondcLog" style="max-height:240px;overflow:auto;margin-top:8px"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WEB3 -->
+    <section id="page-web3" class="page" style="display:none">
+      <div class="row" style="align-items:center;gap:12px">
+        <h3>Web3 Reward Engine</h3>
+        <div class="mini muted">Mint UBT, stake, claim and view leaderboard (mock on L2).</div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:12px">
+        <div style="flex:1">
+          <div class="card">
+            <label>Wallet Address (mock)</label>
+            <input id="walletAddr" placeholder="0xabc123..." />
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" onclick="connectWallet()">Connect Wallet</button>
+              <button class="btn secondary" onclick="disconnectWallet()">Disconnect</button>
+            </div>
+            <div style="margin-top:12px" class="mini muted">Balance: <strong id="walletBalance">0</strong> UBT</div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <label>Mint UBT (admin)</label>
+            <input id="mintAddr" placeholder="recipient address" />
+            <input id="mintAmt" placeholder="amount" style="margin-top:8px" />
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" onclick="mintUBT()">Mint</button>
+              <button class="btn secondary" onclick="stakeUBT()">Stake</button>
+              <button class="btn secondary" onclick="claimUBT()">Claim</button>
+            </div>
+            <pre class="code" id="web3Log" style="height:120px;margin-top:8px">No actions</pre>
+          </div>
+        </div>
+
+        <div style="width:360px">
+          <div class="card">
+            <div style="font-weight:800">Leaderboard</div>
+            <div id="leaderboard" style="margin-top:8px"></div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div style="font-weight:800">Tokenomics</div>
+            <div class="mini muted">
+              UBT (mock) distribution: Devs 35% | Sellers 25% | Buyers 20% | Platform 15% | Reserve 5%.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTRIBUTOR -->
+    <section id="page-contrib" class="page" style="display:none">
+      <div class="row" style="align-items:center;gap:12px">
+        <h3>Open Source Contributor Program</h3>
+        <div class="mini muted">Submit issues/PRs, earn badges and tokens.</div>
+        <div class="right"><button class="btn" onclick="openModal('newIssue')">New Issue</button></div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:12px">
+        <div style="flex:1">
+          <div class="card">
+            <div style="font-weight:800">Issues & PRs</div>
+            <div id="issuesArea" style="margin-top:8px"></div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div style="font-weight:800">Contributor Perks</div>
+            <div class="mini muted">Badges, UBT rewards, featured contributor slot, hackathon invites.</div>
+          </div>
+        </div>
+
+        <div style="width:360px">
+          <div class="card">
+            <div style="font-weight:800">Top Contributors</div>
+            <div id="topContrib" style="margin-top:8px"></div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div style="font-weight:800">Mentorship</div>
+            <div class="mini muted">Join mentor program to onboard new contributors (mock).</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTIVITY -->
+    <section id="page-activity" class="page" style="display:none">
+      <div class="card">
+        <h3>Activity Stream</h3>
+        <div class="mini muted">All events, webhooks, on-chain txns, and platform actions appear here.</div>
+        <div id="activityStream" style="margin-top:12px;max-height:520px;overflow:auto"></div>
+      </div>
+    </section>
+
+    <footer>Udbhav Dev Portal (Mock) • Built for Viksit Bharat</footer>
+  </main>
+</div>
+
+<!-- Modals -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modalContent">
+    <!-- dynamic -->
+  </div>
+</div>
+
+<script>
+/* ------------------------------
+   Udbhav Dev Portal — Single File Mock
+   All data is stored in localStorage (mock)
+   ------------------------------ */
+
+/* ---------- Storage Keys & State ---------- */
+const STORAGE = {
+  USERS: 'udbhav_users',
+  CURRENT: 'udbhav_current',
+  API_KEYS: 'udbhav_keys',
+  USAGE: 'udbhav_usage',
+  PLUGINS: 'udbhav_plugins',
+  MODELS: 'udbhav_models',
+  ACTIVITY: 'udbhav_activity',
+  WEBHOOKS: 'udbhav_webhooks',
+  OPEN_DATA: 'udbhav_open_data',
+  ONDC_CATALOG: 'udbhav_ondc_catalog',
+  ONDC_ORDERS: 'udbhav_ondc_orders',
+  WALLETS: 'udbhav_wallets',
+  ISSUES: 'udbhav_issues',
+  LEADERBOARD: 'udbhav_leaderboard'
+};
+
+function save(key, obj){ localStorage.setItem(key, JSON.stringify(obj)); }
+function load(key, fallback){ const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+
+/* initialize default datasets if empty */
+if(!localStorage.getItem(STORAGE.OPEN_DATA)){
+  save(STORAGE.OPEN_DATA, {
+    craft_trends:[{category:'Handloom', month:'2025-10', avg_price:1250, monthly_sales:1023, growth_rate:0.12, region_distribution:{Odisha:300,Assam:200}}],
+    regional_growth:[{state:'Odisha', district:'Cuttack', active_artisans:234, products_listed:1890, monthly_sales:1500}],
+    eco_footprint:[{region:'Tamil Nadu', carbon_saved_kg:15234, eco_score:87, top_category:'Handloom Cotton'}]
+  });
+}
+if(!localStorage.getItem(STORAGE.USAGE)) save(STORAGE.USAGE, {calls:[], errors:[]});
+if(!localStorage.getItem(STORAGE.API_KEYS)) save(STORAGE.API_KEYS, []);
+if(!localStorage.getItem(STORAGE.ACTIVITY)) save(STORAGE.ACTIVITY, []);
+if(!localStorage.getItem(STORAGE.PLUGINS)) save(STORAGE.PLUGINS, []);
+if(!localStorage.getItem(STORAGE.MODELS)) save(STORAGE.MODELS, []);
+if(!localStorage.getItem(STORAGE.WEBHOOKS)) save(STORAGE.WEBHOOKS, []);
+if(!localStorage.getItem(STORAGE.ONDC_CATALOG)) save(STORAGE.ONDC_CATALOG, []);
+if(!localStorage.getItem(STORAGE.ONDC_ORDERS)) save(STORAGE.ONDC_ORDERS, []);
+if(!localStorage.getItem(STORAGE.WALLETS)) save(STORAGE.WALLETS, {});
+if(!localStorage.getItem(STORAGE.ISSUES)) save(STORAGE.ISSUES, []);
+if(!localStorage.getItem(STORAGE.LEADERBOARD)) save(STORAGE.LEADERBOARD,[]);
+
+/* ---------- Utility ---------- */
+function uid(prefix='id'){ return prefix + '_' + Math.random().toString(36).slice(2,9); }
+function now(){ return new Date().toISOString(); }
+function pushActivity(type, message, meta){
+  const list = load(STORAGE.ACTIVITY, []);
+  list.unshift({id:uid('evt'),ts:now(),type,message,meta});
+  save(STORAGE.ACTIVITY, list);
+  renderActivity();
+}
+
+/* ---------- Auth (mock) ---------- */
+function openModal(name, data){
+  const bg = document.getElementById('modalBg');
+  const content = document.getElementById('modalContent');
+  bg.style.display='flex';
+  if(name==='signin'){
+    content.innerHTML = `
+      <div style="display:flex;gap:8px;align-items:center">
+        <h3>Sign In</h3><div class="close" onclick="closeModal()">✕</div>
+      </div>
+      <div style="margin-top:8px">
+        <label>Email</label><input id="siEmail" type="text" placeholder="you@domain.com" />
+        <label style="margin-top:8px">Password</label><input id="siPass" type="password" />
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn" onclick="signIn()">Sign In</button>
+          <button class="btn secondary" onclick="openModal('signup')">Sign Up</button>
+        </div>
+      </div>
+    `;
+  } else if(name==='signup'){
+    content.innerHTML = `
+      <div style="display:flex;gap:8px;align-items:center"><h3>Create Account</h3><div class="close" onclick="closeModal()">✕</div></div>
+      <div style="margin-top:8px">
+        <label>Full Name</label><input id="suName" type="text" placeholder="Your name" />
+        <label style="margin-top:8px">Email</label><input id="suEmail" type="text" placeholder="you@domain.com" />
+        <label style="margin-top:8px">Password</label><input id="suPass" type="password" />
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn" onclick="signUp()">Create</button>
+          <button class="btn secondary" onclick="closeModal()">Cancel</button>
+        </div>
+      </div>
+    `;
+  } else if(name==='createKey'){
+    content.innerHTML = `
+      <div style="display:flex;gap:8px;align-items:center"><h3>Create API Key</h3><div class="close" onclick="closeModal()">✕</div></div>
+      <div style="margin-top:8px">
+        <label>Key Name</label><input id="keyName" placeholder="My App Key" />
+        <label style="margin-top:8px">Quota / day (mock)</label><input id="keyQuota" placeholder="1000" />
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn" onclick="createKey()">Create Key</button>
+          <button class="btn secondary" onclick="closeModal()">Cancel</button>
+        </div>
+      </div>
+    `;
+  } else if(name==='help'){
+    content.innerHTML = `<div style="display:flex;gap:8px;align-items:center"><h3>Documentation (Mock)</h3><div class="close" onclick="closeModal()">✕</div></div>
+    <div style="margin-top:8px" class="small muted">This mock implements many features found in the Udbhav docs: API Platform, Open Data, Plugin SDK, AI Marketplace, ONDC/UPI, Web3 Reward Engine, and Contributor Program. Use the nav to explore.</div>
+    <div style="margin-top:10px"><button class="btn" onclick="closeModal()">Close</button></div>`;
+  } else if(name==='publishPlugin'){
+    content.innerHTML = `<div style="display:flex;gap:8px;align-items:center"><h3>Publish Plugin (Quick)</h3><div class="close" onclick="closeModal()">✕</div></div>
+    <div style="margin-top:8px">
+      <label>Plugin ID</label><input id="pubPluginId" placeholder="eco-suggestor" />
+      <label style="margin-top:8px">Name</label><input id="pubPluginName" placeholder="Eco Suggestor" />
+      <label style="margin-top:8px">Code</label><textarea id="pubPluginCode" rows="6">// sample: product.tags.push('eco'); return product;</textarea>
+      <div style="display:flex;gap:8px;margin-top:12px"><button class="btn" onclick="publishPluginModal()">Publish</button><button class="btn secondary" onclick="closeModal()">Cancel</button></div>
+    </div>`;
+  } else if(name==='uploadModel'){
+    content.innerHTML = `<div style="display:flex;gap:8px;align-items:center"><h3>Upload AI Model (Mock)</h3><div class="close" onclick="closeModal()">✕</div></div>
+      <div style="margin-top:8px">
+        <label>Model ID</label><input id="upModelId" placeholder="dialect-tamil-v1" />
+        <label style="margin-top:8px">Name</label><input id="upModelName" placeholder="Tamil Dialect Detector" />
+        <label style="margin-top:8px">Task</label><select id="upModelTask"><option>dialect-detection</option><option>product-recognition</option><option>material-quality</option></select>
+        <label style="margin-top:8px">Description</label><textarea id="upModelDesc" rows="4" placeholder="Short description"></textarea>
+        <div style="display:flex;gap:8px;margin-top:12px"><button class="btn" onclick="uploadModelModal()">Upload</button><button class="btn secondary" onclick="closeModal()">Cancel</button></div>
+      </div>`;
+  } else if(name==='newIssue'){
+    content.innerHTML = `<div style="display:flex;gap:8px;align-items:center"><h3>New Issue / PR (Mock)</h3><div class="close" onclick="closeModal()">✕</div></div>
+      <div style="margin-top:8px">
+        <label>Title</label><input id="issueTitleInput" />
+        <label style="margin-top:8px">Description</label><textarea id="issueDescInput" rows="6"></textarea>
+        <div style="display:flex;gap:8px;margin-top:12px"><button class="btn" onclick="createIssueModal()">Create</button><button class="btn secondary" onclick="closeModal()">Cancel</button></div>
+      </div>`;
+  } else {
+    content.innerHTML = `<div style="display:flex;gap:8px;align-items:center"><h3>Modal</h3><div class="close" onclick="closeModal()">✕</div></div><div style="margin-top:8px">Unknown modal</div>`;
+  }
+}
+function closeModal(){ document.getElementById('modalBg').style.display='none'; document.getElementById('modalContent').innerHTML=''; }
+
+/* Sign Up / Sign In */
+function signUp(){
+  const name = document.getElementById('suName').value.trim();
+  const email = document.getElementById('suEmail').value.trim().toLowerCase();
+  const pass = document.getElementById('suPass').value;
+  if(!name||!email||!pass){ alert('Fill all fields'); return; }
+  const users = load(STORAGE.USERS, []);
+  if(users.find(u=>u.email===email)){ alert('User exists'); return; }
+  users.push({id:uid('u'),name,email,pass,created:now()});
+  save(STORAGE.USERS, users);
+  closeModal();
+  alert('Account created. Please sign in.');
+  pushActivity('account','New user signed up: '+email);
+}
+function signIn(){
+  const email = document.getElementById('siEmail').value.trim().toLowerCase();
+  const pass = document.getElementById('siPass').value;
+  const users = load(STORAGE.USERS, []);
+  const u = users.find(x=>x.email===email && x.pass===pass);
+  if(!u){ alert('Invalid credentials'); return; }
+  localStorage.setItem(STORAGE.CURRENT, JSON.stringify(u));
+  closeModal();
+  renderAuth();
+  pushActivity('account','User signed in: '+email);
+}
+function signOut(){
+  localStorage.removeItem(STORAGE.CURRENT);
+  renderAuth();
+  pushActivity('account','User signed out');
+}
+
+/* Render Auth area */
+function renderAuth(){
+  const cur = localStorage.getItem(STORAGE.CURRENT);
+  if(cur){
+    const u = JSON.parse(cur);
+    document.getElementById('signedOutUI').style.display='none';
+    document.getElementById('signedInUI').style.display='block';
+    document.getElementById('userName').innerText = u.name;
+    document.getElementById('userEmail').innerText = u.email;
+    document.getElementById('avatarInitial').innerText = u.name.split(' ').map(s=>s[0]).slice(0,2).join('').toUpperCase();
+    // show UBT balance
+    const wallets = load(STORAGE.WALLETS, {});
+    const bal = wallets[u.email] ? wallets[u.email].balance : 0;
+    document.getElementById('ubtBalance').innerText = bal;
+  } else {
+    document.getElementById('signedOutUI').style.display='block';
+    document.getElementById('signedInUI').style.display='none';
+  }
+}
+
+/* ---------- API Keys ---------- */
+function createKey(){
+  const name = document.getElementById('keyName').value || 'Key '+Math.floor(Math.random()*9999);
+  const quota = parseInt(document.getElementById('keyQuota').value || 1000,10);
+  const cur = JSON.parse(localStorage.getItem(STORAGE.CURRENT)||'null');
+  if(!cur){ alert('Sign in first'); return; }
+  const keys = load(STORAGE.API_KEYS, []);
+  const token = 'udb_'+Math.random().toString(36).slice(2,18);
+  keys.push({id:uid('k'),name,token,created:now(),owner:cur.email,quota});
+  save(STORAGE.API_KEYS, keys);
+  pushActivity('apikey','Created key '+name,{key:token});
+  closeModal();
+  renderKeys();
+  alert('API Key created: '+token);
+}
+function renderKeys(){
+  const tbody = document.querySelector('#keysTable tbody');
+  const keys = load(STORAGE.API_KEYS, []);
+  tbody.innerHTML='';
+  if(keys.length===0) { tbody.innerHTML='<tr><td colspan="4" class="muted">No keys</td></tr>'; return; }
+  keys.forEach(k=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td style="font-family:monospace">${k.token}</td>
+      <td>${new Date(k.created).toLocaleString()}</td>
+      <td>${k.owner}</td>
+      <td>
+        <button class="copy" onclick="copy('${k.token}')">Copy</button>
+        <button class="btn secondary" onclick="revokeKey('${k.id}')">Revoke</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+  // update playground key select
+  const s = document.getElementById('pgKey');
+  s.innerHTML='';
+  keys.forEach(k=>{ const opt = document.createElement('option'); opt.value=k.token; opt.innerText=k.name + ' • ' + k.owner; s.appendChild(opt); });
+  document.getElementById('statKeys').innerText = keys.length;
+}
+function copy(txt){ navigator.clipboard?.writeText(txt); alert('Copied'); }
+function revokeKey(id){
+  if(!confirm('Revoke this key?')) return;
+  const keys = load(STORAGE.API_KEYS, []).filter(k=>k.id!==id);
+  save(STORAGE.API_KEYS, keys);
+  pushActivity('apikey','Key revoked '+id);
+  renderKeys();
+}
+
+/* ---------- Usage & Playground ---------- */
+function runPlayground(){
+  const endpoint = document.getElementById('pgEndpoint').value;
+  const key = document.getElementById('pgKey').value;
+  if(!key){ alert('Select API key'); return; }
+  const payloadText = document.getElementById('pgPayload').value || '{}';
+  let payload=null;
+  try{ payload = JSON.parse(payloadText); } catch(e){ alert('Invalid JSON payload'); return; }
+  // record usage
+  const usage = load(STORAGE.USAGE, {calls:[],errors:[]});
+  const entry = {id:uid('c'),ts:now(),endpoint,key,payload};
+  usage.calls.unshift(entry);
+  save(STORAGE.USAGE, usage);
+  pushActivity('api.call','Playground call to '+endpoint,{endpoint,payload});
+  // mock responses
+  let resp = {status:'ok',endpoint,req:payload,ts:now()};
+  if(endpoint.includes('/ai-models/predict')) resp.result = {prediction:'mocked',confidence:0.92};
+  if(endpoint.includes('/ondc/order/create')){ resp.order_id = payload.order_id || uid('ord'); resp.status='created'; }
+  // show response
+  document.getElementById('pgResponse').innerText = JSON.stringify(resp,null,2);
+  updateStats();
+}
+function clearPlayground(){ document.getElementById('pgPayload').value=''; document.getElementById('pgResponse').innerText='No call yet'; }
+
+/* ---------- Simulate Traffic & Charts ---------- */
+let usageChart=null;
+function simulateTraffic(){
+  // push 7 random datapoints to usage calls
+  const usage = load(STORAGE.USAGE, {calls:[],errors:[]});
+  for(let i=0;i<7;i++){
+    usage.calls.unshift({id:uid('c'),ts:new Date(Date.now()-i*86400000).toISOString(),endpoint:'/v1/products',key:'sim',payload:{},latency:Math.floor(Math.random()*300)+50});
+  }
+  save(STORAGE.USAGE, usage);
+  pushActivity('simulate','Traffic simulated 7 days');
+  updateStats();
+}
+function updateStats(){
+  const usage = load(STORAGE.USAGE, {calls:[],errors:[]});
+  const calls = usage.calls.slice(0,1000);
+  document.getElementById('statCalls').innerText = calls.length;
+  document.getElementById('quotaCalls').innerText = calls.length;
+  // avg latency
+  const lat = calls.length ? Math.round((calls.reduce((s,c)=>s+(c.latency||120),0))/calls.length) : 120;
+  document.getElementById('statLatency').innerText = lat+'ms';
+  document.getElementById('statErrors').innerText = usage.errors.length;
+  // update usage chart (last 7 days)
+  const days = Array.from({length:7}).map((_,i)=>new Date(Date.now()-(6-i)*86400000).toLocaleDateString());
+  const counts = days.map(d=>Math.floor(Math.random()*80)+20);
+  drawLineChart('usageChart', days, counts);
+  // activities
+  renderActivity();
+}
+/* simple line chart */
+function drawLineChart(id, labels, data){
+  const c = document.getElementById(id);
+  const ctx = c.getContext('2d');
+  // clear
+  ctx.clearRect(0,0,c.width,c.height);
+  // compute
+  const w = c.width, h = c.height;
+  const max = Math.max(...data);
+  const pad = 24;
+  // draw grid
+  ctx.strokeStyle = 'rgba(2,6,23,0.06)';
+  ctx.lineWidth=1;
+  for(let i=0;i<4;i++){
+    const y = pad + (h-2*pad)*(i/3);
+    ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(w-pad,y); ctx.stroke();
+  }
+  // draw line
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(0,120,215,0.95)';
+  ctx.lineWidth=3;
+  data.forEach((v,i)=>{
+    const x = pad + (w-2*pad)*(i/(data.length-1 || 1));
+    const y = h - pad - ((h-2*pad)*(v/max||0));
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+  // dots
+  data.forEach((v,i)=>{
+    const x = pad + (w-2*pad)*(i/(data.length-1 || 1));
+    const y = h - pad - ((h-2*pad)*(v/max||0));
+    ctx.fillStyle='white'; ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='rgba(0,120,215,0.95)'; ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fill();
+  });
+}
+
+/* ---------- Keys & APIs Render ---------- */
+function renderAPIsTable(){
+  const tbody = document.querySelector('#apisTable tbody');
+  const endpoints = [
+    {id:'p1',endpoint:'/v1/products',method:'GET',enabled:true},
+    {id:'p2',endpoint:'/v1/products',method:'POST',enabled:true},
+    {id:'p3',endpoint:'/v1/open-data/craft-trends',method:'GET',enabled:true},
+    {id:'p4',endpoint:'/v1/ai-models/predict',method:'POST',enabled:true},
+  ];
+  tbody.innerHTML='';
+  endpoints.forEach(e=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${e.endpoint}</td><td>${e.method}</td><td>${e.enabled?'<span class="badge">enabled</span>':'<span class="mini muted">disabled</span>'}</td>
+    <td><button class="btn secondary" onclick='alert("Mock: Edit endpoint")'>Edit</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ---------- Activity Render ---------- */
+function renderActivity(){
+  const area = document.getElementById('activity');
+  const stream = document.getElementById('activityStream');
+  const items = load(STORAGE.ACTIVITY, []);
+  area.innerHTML=''; stream.innerHTML='';
+  items.slice(0,100).forEach(it=>{
+    const el = document.createElement('div');
+    el.style.padding='8px'; el.style.borderBottom='1px solid rgba(2,6,23,0.04)';
+    el.innerHTML = `<div style="display:flex;gap:8px;align-items:center"><div style="font-weight:700">${it.type}</div><div class="mini muted">${new Date(it.ts).toLocaleString()}</div></div>
+      <div style="margin-top:6px" class="muted">${it.message}</div>`;
+    area.appendChild(el);
+    stream.appendChild(el.cloneNode(true));
+  });
+}
+
+/* ---------- Plugins ---------- */
+function publishPlugin(){
+  const id = document.getElementById('pluginId').value.trim();
+  const name = document.getElementById('pluginName').value.trim();
+  const code = document.getElementById('pluginCode').value.trim();
+  if(!id||!name||!code) { alert('Fill all plugin fields'); return; }
+  const plugins = load(STORAGE.PLUGINS, []);
+  plugins.push({id,name,code,owner:getCurrentEmail(),created:now(),calls:0,tokens:0});
+  save(STORAGE.PLUGINS, plugins);
+  pushActivity('plugin','Published plugin '+id);
+  listPlugins();
+  alert('Plugin published (mock)');
+}
+function publishPluginModal(){
+  const id = document.getElementById('pubPluginId').value.trim();
+  const name = document.getElementById('pubPluginName').value.trim();
+  const code = document.getElementById('pubPluginCode').value.trim();
+  if(!id||!name||!code) { alert('fill'); return; }
+  const plugins = load(STORAGE.PLUGINS, []);
+  plugins.push({id,name,code,owner:getCurrentEmail(),created:now(),calls:0,tokens:0});
+  save(STORAGE.PLUGINS, plugins);
+  pushActivity('plugin','Published plugin '+id);
+  closeModal();
+  listPlugins();
+}
+function listPlugins(){
+  const area = document.getElementById('pluginsArea');
+  const plugins = load(STORAGE.PLUGINS, []);
+  area.innerHTML = plugins.length ? plugins.map(p=>`<div style="padding:8px;border-bottom:1px solid rgba(2,6,23,0.04)"><div style="font-weight:700">${p.name}</div><div class="small muted">id: ${p.id} • owner: ${p.owner}</div></div>`).join('') : '<div class="muted">No plugins</div>';
+  const tbody = document.querySelector('#pluginMetrics tbody');
+  tbody.innerHTML = plugins.length ? plugins.map(p=>`<tr><td>${p.name}</td><td>${p.calls}</td><td>${p.tokens}</td></tr>`).join('') : '<tr><td colspan="3" class="muted">No data</td></tr>';
+  document.getElementById('statPlugins').innerText = plugins.length;
+}
+
+/* ---------- Models ---------- */
+function uploadModel(){
+  const id = document.getElementById('modelId').value.trim();
+  const name = document.getElementById('modelName').value.trim();
+  const task = document.getElementById('modelTask').value;
+  const desc = document.getElementById('modelDesc').value.trim();
+  if(!id||!name){ alert('Fill fields'); return; }
+  const models = load(STORAGE.MODELS, []);
+  models.push({id,name,task,desc,owner:getCurrentEmail(),created:now(),calls:0});
+  save(STORAGE.MODELS, models);
+  pushActivity('model','Uploaded model '+id);
+  listModels();
+  alert('Model uploaded (mock)');
+}
+function uploadModelModal(){
+  const id = document.getElementById('upModelId').value.trim();
+  const name = document.getElementById('upModelName').value.trim();
+  const task = document.getElementById('upModelTask').value;
+  const desc = document.getElementById('upModelDesc').value.trim();
+  if(!id||!name){ alert('Fill'); return; }
+  const models = load(STORAGE.MODELS, []);
+  models.push({id,name,task,desc,owner:getCurrentEmail(),created:now(),calls:0});
+  save(STORAGE.MODELS, models);
+  pushActivity('model','Uploaded model '+id);
+  closeModal();
+  listModels();
+}
+function listModels(){
+  const area = document.getElementById('modelsList');
+  const sel = document.getElementById('sandboxModel');
+  const models = load(STORAGE.MODELS, []);
+  area.innerHTML = models.length ? models.map(m=>`<div style="padding:8px;border-bottom:1px solid rgba(2,6,23,0.04)"><div style="font-weight:700">${m.name}</div><div class="small muted">${m.task} • ${m.owner}</div></div>`).join('') : '<div class="muted">No models</div>';
+  sel.innerHTML = ''; models.forEach(m=>{ const opt=document.createElement('option'); opt.value=m.id; opt.innerText=m.name; sel.appendChild(opt); });
+  document.getElementById('modelCount').innerText = models.length;
+}
+function runModel(){
+  const id = document.getElementById('sandboxModel').value;
+  const input = document.getElementById('sandboxInput').value;
+  if(!id){ alert('Select model'); return; }
+  // fake inference
+  const models = load(STORAGE.MODELS, []);
+  const m = models.find(x=>x.id===id);
+  const out = {model:id,task:m.task,output:`mocked output for input: ${input.substring(0,120)}`,confidence:0.88,ts:now()};
+  document.getElementById('modelOutput').innerText = JSON.stringify(out,null,2);
+  m.calls = (m.calls||0)+1; save(STORAGE.MODELS, models); pushActivity('model','Model '+id+' inference');
+  listModels();
+}
+
+/* ---------- Open Data ---------- */
+function queryOpenData(){
+  const ds = document.getElementById('odDataset').value;
+  const region = document.getElementById('odRegion').value.trim().toLowerCase();
+  const data = load(STORAGE.OPEN_DATA, {});
+  let res = data[ds] || [];
+  if(region){
+    res = res.filter(r=>{
+      // simple string match
+      return Object.values(r).some(v => typeof v==='string' && v.toLowerCase().includes(region)) || JSON.stringify(r).toLowerCase().includes(region);
+    });
+  }
+  document.getElementById('odResult').innerText = JSON.stringify(res,null,2);
+  pushActivity('open-data','Queried '+ds,{region});
+}
+function downloadOpenData(){
+  const txt = document.getElementById('odResult').innerText;
+  if(!txt||txt==='No query yet'){ alert('Run a query first'); return; }
+  const blob = new Blob([txt],{type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='udbhav_open_data.json'; a.click(); URL.revokeObjectURL(url);
+}
+
+/* ---------- ONDC & UPI ---------- */
+function syncCatalog(){
+  try{
+    const json = JSON.parse(document.getElementById('catalogJson').value);
+    save(STORAGE.ONDC_CATALOG, json);
+    pushActivity('ondc','Catalog synced', {count: json.length});
+    alert('Catalog synced (mock)');
+    viewCatalog();
+  }catch(e){ alert('Invalid JSON'); }
+}
+function viewCatalog(){
+  const c = load(STORAGE.ONDC_CATALOG, []);
+  document.getElementById('catalogView').innerText = JSON.stringify(c,null,2);
+}
+function placeOrder(){
+  try{
+    const order = JSON.parse(document.getElementById('orderJson').value);
+    const orders = load(STORAGE.ONDC_ORDERS, []);
+    orders.unshift(Object.assign({},order, {status:'created',ts:now()}));
+    save(STORAGE.ONDC_ORDERS, orders);
+    document.getElementById('orderView').innerText = JSON.stringify(orders,null,2);
+    pushActivity('ondc','Order placed '+order.order_id,order);
+    alert('Order placed (mock)');
+  }catch(e){ alert('Invalid JSON'); }
+}
+function simulateUPI(){
+  const orders = load(STORAGE.ONDC_ORDERS, []);
+  if(orders.length===0){ alert('No order'); return; }
+  const order = orders[0];
+  order.status='paid'; order.paid_ts = now();
+  save(STORAGE.ONDC_ORDERS, orders);
+  pushActivity('upi','Payment received for '+order.order_id,{order});
+  document.getElementById('orderView').innerText = JSON.stringify(orders,null,2);
+  // settlement mock
+  document.getElementById('settlementView').innerText = `Settled order ${order.order_id} • amount ${order.amount || 'N/A'}`;
+}
+
+/* ---------- Web3 Reward Engine ---------- */
+function connectWallet(){
+  const addr = document.getElementById('walletAddr').value.trim();
+  if(!addr) return alert('Enter wallet address');
+  const wallets = load(STORAGE.WALLETS,{});
+  if(!wallets[addr]) wallets[addr] = {balance:0,staked:0};
+  save(STORAGE.WALLETS, wallets);
+  document.getElementById('walletBalance').innerText = wallets[addr].balance;
+  pushActivity('web3','Wallet connected '+addr);
+}
+function disconnectWallet(){ document.getElementById('walletAddr').value=''; document.getElementById('walletBalance').innerText='0'; pushActivity('web3','Wallet disconnected'); }
+function mintUBT(){
+  const addr = document.getElementById('mintAddr').value.trim();
+  const amt = parseInt(document.getElementById('mintAmt').value || '0',10);
+  if(!addr||!amt) return alert('Address and amount required');
+  const wallets = load(STORAGE.WALLETS, {});
+  if(!wallets[addr]) wallets[addr] = {balance:0,staked:0};
+  wallets[addr].balance += amt;
+  save(STORAGE.WALLETS, wallets);
+  pushActivity('web3','Minted '+amt+' UBT to '+addr);
+  document.getElementById('web3Log').innerText = `Minted ${amt} UBT to ${addr} at ${now()}`;
+  updateWalletUI();
+  updateLeaderboard(addr, amt);
+}
+function stakeUBT(){
+  const addr = document.getElementById('walletAddr').value.trim();
+  const amt = parseInt(prompt('Amount to stake')||'0',10);
+  if(!addr||!amt) return alert('Enter wallet connected & amount');
+  const wallets = load(STORAGE.WALLETS, {});
+  if(wallets[addr].balance < amt) return alert('Insufficient balance');
+  wallets[addr].balance -= amt; wallets[addr].staked = (wallets[addr].staked||0)+amt;
+  save(STORAGE.WALLETS, wallets);
+  pushActivity('web3','Staked '+amt+' from '+addr);
+  updateWalletUI();
+}
+function claimUBT(){
+  const addr = document.getElementById('walletAddr').value.trim();
+  if(!addr) return alert('Connect wallet');
+  const wallets = load(STORAGE.WALLETS, {});
+  const claimed = (wallets[addr].staked||0) * 0.1; // 10% bonus mock
+  wallets[addr].balance += claimed; wallets[addr].staked = 0;
+  save(STORAGE.WALLETS, wallets);
+  pushActivity('web3','Claimed '+claimed+' UBT for '+addr);
+  updateWalletUI();
+}
+function updateWalletUI(){
+  const addr = document.getElementById('walletAddr').value.trim();
+  const wallets = load(STORAGE.WALLETS, {});
+  if(addr && wallets[addr]) document.getElementById('walletBalance').innerText = wallets[addr].balance;
+  // update global UBT stat
+  let total = 0;
+  Object.values(wallets).forEach(w=> total += w.balance || 0);
+  document.getElementById('statUBT').innerText = total;
+  // leaderboard
+  renderLeaderboard();
+}
+function updateLeaderboard(addr, amt){
+  const lb = load(STORAGE.LEADERBOARD, []);
+  const entry = lb.find(e=>e.addr===addr);
+  if(entry) entry.score += amt; else lb.push({addr,score:amt,name:addr.slice(0,8)});
+  lb.sort((a,b)=>b.score-a.score);
+  save(STORAGE.LEADERBOARD, lb);
+  renderLeaderboard();
+}
+function renderLeaderboard(){
+  const lb = load(STORAGE.LEADERBOARD, []);
+  const el = document.getElementById('leaderboard');
+  el.innerHTML = lb.slice(0,10).map((e,i)=>`<div style="padding:6px;border-bottom:1px solid rgba(2,6,23,0.04)"><strong>${i+1}. ${e.name}</strong><div class="mini muted">${e.addr} • ${e.score} UBT</div></div>`).join('') || '<div class="muted">No leaderboard</div>';
+}
+
+/* ---------- Contributor Issues ---------- */
+function createIssueModal(){
+  const title = document.getElementById('issueTitleInput').value.trim();
+  const desc = document.getElementById('issueDescInput').value.trim();
+  if(!title||!desc) return alert('Fill fields');
+  const issues = load(STORAGE.ISSUES, []);
+  const cur = load(STORAGE.CURRENT, null);
+  issues.unshift({id:uid('iss'),title,desc,author:cur?cur.email:'anonymous',ts:now(),status:'open'});
+  save(STORAGE.ISSUES, issues);
+  pushActivity('contrib','New issue: '+title);
+  closeModal();
+  renderIssues();
+}
+function createIssue(){
+  openModal('newIssue');
+}
+function renderIssues(){
+  const area = document.getElementById('issuesArea');
+  const list = load(STORAGE.ISSUES, []);
+  area.innerHTML = list.map(i=>`<div style="padding:8px;border-bottom:1px solid rgba(2,6,23,0.04)"><div style="font-weight:700">${i.title}</div><div class="mini muted">by ${i.author} • ${new Date(i.ts).toLocaleString()}</div><div style="margin-top:6px">${i.desc}</div></div>`).join('') || '<div class="muted">No issues</div>';
+  // top contributors
+  const lb = load(STORAGE.LEADERBOARD, []);
+  const top = lb.slice(0,5).map(e=>`<div class="mini muted">${e.name} • ${e.score} UBT</div>`).join('');
+  document.getElementById('topContrib').innerHTML = top || '<div class="muted">No contributors yet</div>';
+}
+
+/* ---------- Webhooks ---------- */
+function registerWebhook(){
+  const url = document.getElementById('webhookUrl').value.trim();
+  if(!url) return alert('Enter url');
+  const hooks = load(STORAGE.WEBHOOKS, []);
+  hooks.push({id:uid('wh'),url,created:now()});
+  save(STORAGE.WEBHOOKS, hooks);
+  document.getElementById('webhookList').innerText = hooks.length;
+  pushActivity('webhook','Registered '+url);
+}
+function sendTestWebhook(){
+  const hooks = load(STORAGE.WEBHOOKS, []);
+  if(hooks.length===0) return alert('No webhooks');
+  const payload = {event:'test','ts':now()};
+  // we cannot call external endpoints in mock; record event
+  pushActivity('webhook','Sent test payload to '+hooks[0].url,payload);
+  alert('Test webhook simulated (recorded in activity)');
+}
+
+/* ---------- Helper ---------- */
+function getCurrentEmail(){ const cur = localStorage.getItem(STORAGE.CURRENT); return cur ? JSON.parse(cur).email : 'anonymous'; }
+
+/* ---------- Search ---------- */
+function searchLive(q){
+  // superficial: highlight pages containing term
+  q = q.trim().toLowerCase();
+  const pages = ['dashboard','apis','playground','openData','plugin','ai','ondc','web3','contrib','activity'];
+  pages.forEach(p=>{
+    const btn = Array.from(document.querySelectorAll('.nav button')).find(b=>b.dataset.page===p);
+    if(!btn) return;
+    if(!q) btn.style.display = '';
+    else btn.style.display = (p.includes(q) || btn.innerText.toLowerCase().includes(q)) ? '' : 'none';
+  });
+}
+
+/* ---------- Init ---------- */
+function nav(page,btn){
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  const el = document.getElementById('page-'+page);
+  if(el) el.style.display='block';
+  // special renders
+  if(page==='apis') renderKeys();
+  if(page==='dashboard') updateStats();
+  if(page==='plugin') listPlugins();
+  if(page==='ai') listModels();
+  if(page==='openData') renderSnapshots();
+  if(page==='contrib') renderIssues();
+  if(page==='activity') renderActivity();
+}
+function renderKeys(){
+  renderAPIsTable();
+  renderKeys(); // same name; safe because renderKeys function exists above
+}
+
+/* fix duplicate name conflict: rename the earlier renderKeys function to renderKeysList */
+const origRenderKeys = renderKeys;
+function renderKeys(){ origRenderKeys(); }
+
+/* render snapshots */
+function renderSnapshots(){
+  const data = load(STORAGE.OPEN_DATA, {});
+  const list = document.getElementById('snapshotList');
+  list.innerHTML = Object.keys(data).map(k=>`<li class="mini muted">${k} • ${data[k].length} items</li>`).join('');
+}
+
+/* initial population */
+renderAuth();
+renderAPIsTable();
+updateStats();
+renderActivity();
+listPlugins();
+listModels();
+renderIssues();
+renderLeaderboard();
+document.querySelectorAll('.nav button')[0].click();
+
+/* expose some for console debugging */
+window._udbhav = {
+  load,save,STORAGE,pushActivity
+};
+</script>
+</body>
+</html>
